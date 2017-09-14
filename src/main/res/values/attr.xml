@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleProgressBarView">
+        <attr name="backgroundcolor" format="color"/>
+        <attr name="progresscolor" format="color"/>
+        <attr name="progress" format="integer"/>
+        <attr name="radius" format="dimension"/>
+        <attr name="strokewidth" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="CircleProgressButton">
+        <attr name="innerOuterSpace" format="dimension"/>
+        <attr name="outerStrokeWidth" format="dimension"/>
+        <attr name="duration" format="integer"/>
+        <attr name="circleColorList" format="color"/>
+        <attr name="progressBackground" format="color"/>
+        <attr name="progressColor" format="color"/>
+    </declare-styleable>
+</resources>
