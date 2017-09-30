@@ -15,4 +15,18 @@
         <attr name="progressBackground" format="color"/>
         <attr name="progressColor" format="color"/>
     </declare-styleable>
+    <declare-styleable name="LoadIngView">
+        <attr name="baseRes" format="reference"/>
+        <attr name="animateStyle" format="enum">
+            <enum name="CIRCLE_ANIMATE" value="0"/>
+            <enum name="CIRCLE_SHANDOW" value="1"/>
+            <enum name="CIRCLE_SHAKE" value="2"/>
+        </attr>
+        <attr name="animateDuration" format="integer"/>
+        <attr name="outCircleWidth" format="dimension"/>
+        <attr name="ovalSpanAngle" format="integer"/>
+        <attr name="openAngle" format="integer"/>
+        <attr name="outInnerMargin" format="fraction"/>
+        <attr name="ovalColor" format="color"/>
+    </declare-styleable>
 </resources>
