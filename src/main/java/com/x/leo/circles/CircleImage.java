@@ -37,7 +37,8 @@ public class CircleImage extends android.support.v7.widget.AppCompatImageView{
         this(context, attrs);
     }
 
-
+    private Rect rectSrc = new Rect();
+    private Rect rectDest = new Rect();
     @Override
     protected void onDraw(Canvas canvas) {
         Drawable drawable = getDrawable();
@@ -46,8 +47,8 @@ public class CircleImage extends android.support.v7.widget.AppCompatImageView{
         }else{
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
             Bitmap b = getCircleBitmap(bitmap, 14);
-            final Rect rectSrc = new Rect(0, 0, b.getWidth(), b.getHeight());
-            final Rect rectDest = new Rect(0,0,getWidth(),getHeight());
+            rectSrc.set(0, 0, b.getWidth(), b.getHeight());
+            rectDest.set(0,0,getWidth(),getHeight());
             paint.reset();
             canvas.drawBitmap(b, rectSrc, rectDest, paint);
         }

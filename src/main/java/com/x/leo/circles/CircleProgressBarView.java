@@ -52,6 +52,7 @@ public class CircleProgressBarView extends View {
         mStrokeBackgroundColor = typedArray.getColor(R.styleable.CircleProgressBarView_backgroundcolor, Color.parseColor("#C5DbD0"));
         mRadius = typedArray.getDimensionPixelSize(R.styleable.CircleProgressBarView_radius, 0);
         mStrokeWidth = typedArray.getDimensionPixelSize(R.styleable.CircleProgressBarView_strokewidth, DensityUtils.dp2px(getContext(), 5));
+        typedArray.recycle();
     }
 
     @Override
@@ -61,7 +62,7 @@ public class CircleProgressBarView extends View {
         mMeasuredWidth = getMeasuredWidth();
     }
 
-
+    private RectF oval = new RectF();
     @Override
     protected void onDraw(Canvas canvas) {
         if (mPaint == null) {
@@ -77,7 +78,7 @@ public class CircleProgressBarView extends View {
         }
         mPaint.setColor(mStrokeBackgroundColor);
         canvas.drawCircle(mMeasuredWidth / 2, mMeasuredHeight / 2, mRadius, mPaint);
-        RectF oval = new RectF(mMeasuredWidth / 2 - mRadius, mMeasuredWidth / 2 - mRadius, mMeasuredWidth / 2 + mRadius, mMeasuredWidth / 2 + mRadius);
+        oval.set(mMeasuredWidth / 2 - mRadius, mMeasuredWidth / 2 - mRadius, mMeasuredWidth / 2 + mRadius, mMeasuredWidth / 2 + mRadius);
         mPaint.setColor(mProgressColor);
         canvas.drawArc(oval, 0, mProgress * 360 / 100, false, mPaint);
     }

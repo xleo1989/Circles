@@ -2,9 +2,11 @@ package com.x.leo.circles
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 
 /**
@@ -38,7 +40,10 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
         Point(measuredWidth / 2, measuredHeight / 2)
     }
     var outerInnerSpanFaction: Float = 0.2f
+    private val TAG = "LoadingView"
+
     private val outerInnerSpan: Int by lazy {
+        logd("==outerInnnerSpan==outCircleWidth:" + outCircleWidth)
         when (animateStyle) {
             AnimateStyle.CIRCLE_STYLE -> {
                 (outCircleWidth * outerInnerSpanFaction).toInt()
@@ -55,6 +60,7 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
         }
     }
     private val ovalRadius: Int by lazy {
+        logd("==ovalRadius=="+"outCircleWidth:" + outCircleWidth + "\n outInnerSpan:" + outerInnerSpan)
         when (animateStyle) {
             AnimateStyle.CIRCLE_STYLE -> {
                 (outCircleWidth - outerInnerSpan) / 2
@@ -72,6 +78,7 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
     }
 
     private val outCircleRadius: Int by lazy {
+        logd("==outCircleRadius==" + "ovalRadius:" + ovalRadius + "\nouterINnerSpan:" + outerInnerSpan)
         if (baseHeight > baseWidth) baseHeight / 2 else baseWidth / 2 + outerInnerSpan + ovalRadius
     }
 
@@ -118,9 +125,17 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
             outerInnerSpanFaction = oAttr.getFraction(R.styleable.LoadIngView_outInnerMargin, 1, 1, 0.2f)
             ovalColor = oAttr.getColor(R.styleable.LoadIngView_ovalColor, Color.parseColor("#fffd9236"))
             oAttr.recycle()
+            logd("==init==")
         }
     }
 
+    private val doLog: Boolean = true
+
+    private fun logd(s:String){
+        if(doLog){
+            Log.d(TAG,s)
+        }
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -135,8 +150,7 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
             duration = this@LoadIngView.duration.toLong()
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
-            addUpdateListener {
-                animation ->
+            addUpdateListener { animation ->
                 val animatedValue = animation.getAnimatedValue() as Int
                 when (animateStyle) {
                     AnimateStyle.CIRCLE_STYLE -> {
@@ -170,32 +184,36 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightMeasured = MeasureSpec.getSize(heightMeasureSpec)
 
-        var resultWidth = baseWidth + outCircleWidth
-        var resultHeight = baseHeight + outCircleWidth
+        var resultWidth = baseWidth + outCircleWidth * 2
+        var resultHeight = baseHeight + outCircleWidth * 2
         if (widthMode == MeasureSpec.EXACTLY) {
-            if (widthMeasured < resultWidth) {
+            if (widthMeasured == 0) {
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            } else if (widthMeasured < resultWidth) {
                 throw IllegalArgumentException("width is not big enough")
             } else {
                 resultWidth = widthMeasured
             }
         }
         if (heightMode == MeasureSpec.EXACTLY) {
-            if (heightMeasured < resultHeight) {
+            if (heightMeasured == 0) {
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            } else if (heightMeasured < resultHeight) {
                 throw  IllegalArgumentException("height is not big enough")
             } else {
                 resultHeight = heightMeasured
             }
         }
-
-        setMeasuredDimension(getDefaultSize(resultWidth, widthMeasureSpec),
-                getDefaultSize(resultHeight, heightMeasureSpec))
-
+        setMeasuredDimension(resultWidth, resultHeight)
     }
 
     override fun onDraw(canvas: Canvas?) {
         if (canvas == null) {
             return
         }
+//        logd("measuredWidth:" + measuredWidth + "\nmeasuredHeight:" + measuredHeight
+//         + "\noutCicleWidth" + outCircleWidth + "\n baseWidth" + baseWidth + "\n baseHeight:" + baseHeight
+//         + "\noutCicleRadius" + outCircleRadius + "\novalRadius" + ovalRadius + "\noutInerSpan" + outerInnerSpan)
         background?.draw(canvas)
         mPaint.alpha = 100
         drawBasDrawable(canvas!!)
