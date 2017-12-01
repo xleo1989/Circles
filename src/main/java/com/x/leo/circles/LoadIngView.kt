@@ -60,7 +60,7 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
         }
     }
     private val ovalRadius: Int by lazy {
-        logd("==ovalRadius=="+"outCircleWidth:" + outCircleWidth + "\n outInnerSpan:" + outerInnerSpan)
+        logd("==ovalRadius==" + "outCircleWidth:" + outCircleWidth + "\n outInnerSpan:" + outerInnerSpan)
         when (animateStyle) {
             AnimateStyle.CIRCLE_STYLE -> {
                 (outCircleWidth - outerInnerSpan) / 2
@@ -79,7 +79,8 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
 
     private val outCircleRadius: Int by lazy {
         logd("==outCircleRadius==" + "ovalRadius:" + ovalRadius + "\nouterINnerSpan:" + outerInnerSpan)
-        if (baseHeight > baseWidth) baseHeight / 2 else baseWidth / 2 + outerInnerSpan + ovalRadius
+//        if (baseHeight > baseWidth) baseHeight / 2 else baseWidth / 2 + outerInnerSpan + ovalRadius
+        if (measuredHeight > measuredWidth) measuredWidth / 2 else measuredHeight / 2 - outCircleWidth + outerInnerSpan + ovalRadius
     }
 
     private var mAnimatedValue: Int = 0
@@ -129,11 +130,11 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
         }
     }
 
-    private val doLog: Boolean = true
+    private val doLog: Boolean = false
 
-    private fun logd(s:String){
-        if(doLog){
-            Log.d(TAG,s)
+    private fun logd(s: String) {
+        if (doLog) {
+            Log.d(TAG, s)
         }
     }
 
@@ -190,7 +191,8 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
             if (widthMeasured == 0) {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             } else if (widthMeasured < resultWidth) {
-                throw IllegalArgumentException("width is not big enough")
+//                throw IllegalArgumentException("width is not big enough")
+                resultWidth = widthMeasured
             } else {
                 resultWidth = widthMeasured
             }
@@ -199,7 +201,8 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
             if (heightMeasured == 0) {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             } else if (heightMeasured < resultHeight) {
-                throw  IllegalArgumentException("height is not big enough")
+                resultHeight = heightMeasured
+//                throw  IllegalArgumentException("height is not big enough")
             } else {
                 resultHeight = heightMeasured
             }
@@ -277,7 +280,11 @@ class LoadIngView(ctx: Context, attrs: AttributeSet?) : View(ctx, attrs) {
 
     private fun drawBasDrawable(canvas: Canvas) {
         if (baseDrawable != null) {
-            baseDrawable!!.bounds = Rect(centerPoint.x - baseDrawable!!.intrinsicWidth / 2, centerPoint.y - baseDrawable!!.intrinsicHeight / 2, centerPoint.x + baseDrawable!!.intrinsicWidth / 2, centerPoint.y + baseDrawable!!.intrinsicHeight / 2)
+            val resultSize = ((if (measuredHeight > measuredWidth)
+                measuredWidth - outCircleWidth * 2
+            else
+                measuredHeight - outCircleWidth * 2) * Math.cos(Math.toRadians(45.0))).toInt()
+            baseDrawable!!.bounds = Rect(centerPoint.x - resultSize / 2, centerPoint.y - resultSize / 2, centerPoint.x + resultSize / 2, centerPoint.y + resultSize / 2)
             baseDrawable!!.draw(canvas)
         }
     }
