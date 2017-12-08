@@ -20,7 +20,7 @@ import android.widget.Button
  * @更新描述:${TODO}
  * @下一步：
  */
-class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int, desStyleRes: Int) : Button(ctx, attrs, defStyleAttr, desStyleRes) {
+class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int) : Button(ctx, attrs, defStyleAttr) {
     private lateinit var circleCenter: PointF
     private var innerRadius: Float = 0f
     private var outterRadius: Float = 0f
@@ -50,7 +50,7 @@ class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     }
 
-    constructor(ctx: Context, attrs: AttributeSet?) : this(ctx, attrs, 0, 0)
+    constructor(ctx: Context, attrs: AttributeSet?) : this(ctx, attrs, 0)
     constructor(ctx: Context) : this(ctx, null)
 
     fun setDuration(duration: Int) {
