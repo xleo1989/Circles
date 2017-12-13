@@ -5,8 +5,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
-import android.os.Build
-import android.support.annotation.RequiresApi
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
@@ -38,7 +36,7 @@ class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int
     private var animatorListener: Animator.AnimatorListener? = null
     private lateinit var outRect: RectF
     private val startAngle: Float = 0f
-    private var circleAlpha: Float = 1f
+    private var circleAlpha:Float = 1f
 
     init {
         val attributes = ctx.obtainStyledAttributes(attrs, R.styleable.CircleProgressButton)
@@ -66,7 +64,6 @@ class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int
     override fun getAlpha(): Float {
         return circleAlpha
     }
-
     fun setOnAnimatedEnd() {}
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(object : OnCircleButtonClickListener(l) {
@@ -78,53 +75,30 @@ class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int
     fun setAnimationListener(listener: Animator.AnimatorListener) {
         animatorListener = listener
     }
-
     fun startProgressAnimation() {
         if (animator != null) {
-            if (Build.VERSION.SDK_INT < 19 || !animator!!.isPaused) {
-                animator!!.cancel()
-                initAnimator()
-            }
-        } else {
-            initAnimator()
+            animator!!.cancel()
         }
-        animator!!.start()
-    }
-
-    private fun initAnimator() {
         animator = ValueAnimator.ofInt(0, duration)
         animator!!.duration = duration.toLong()
-        animator!!.addUpdateListener { animation ->
+        animator!!.addUpdateListener {
+            animation ->
             animatedValue = animation.animatedValue as Int
             invalidate()
         }
         if (animatorListener != null) {
             animator!!.addListener(animatorListener)
         }
+        animator!!.start()
     }
 
-    fun cancelAnimation() {
+    fun cancelAnimation(){
         if (animator != null && animator!!.isRunning) {
             animator!!.cancel()
             animator = null
         }
     }
-
-    fun stopAnimation() {
-        if (animator != null && animator!!.isRunning) {
-            animator!!.end()
-            animator = null
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    fun pauseAnimation() {
-        if (animator != null && animator!!.isRunning) {
-            animator!!.pause()
-        }
-    }
-
-    fun resetProgress() {
+    fun resetProgress(){
         animatedValue = 0
     }
 
@@ -132,7 +106,6 @@ class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int
         super.onDetachedFromWindow()
         cancelAnimation()
     }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
@@ -166,13 +139,13 @@ class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int
         canvas.drawCircle(circleCenter.x, circleCenter.y, innerRadius, mPaint)
         if (!TextUtils.isEmpty(text)) {
             val textLength = paint.measureText(text.toString())
-            paint.color = textColors.getColorForState(drawableState, textColors.defaultColor)
+            paint.color = textColors.getColorForState(drawableState,textColors.defaultColor)
             paint.textSize = textSize
             val rect = Rect()
-            paint.getTextBounds(text.toString(), 0, text.length, rect)
+            paint.getTextBounds(text.toString(),0,text.length,rect)
 
-            val y = circleCenter.y - rect.top / 2
-            canvas.drawText(text, 0, text.length, circleCenter.x - textLength / 2, y, paint)
+            val y = circleCenter.y - rect.top/2
+            canvas.drawText(text,0,text.length,circleCenter.x - textLength / 2, y,paint)
         }
     }
 
