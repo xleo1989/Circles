@@ -65,6 +65,12 @@ class CircleProgressButton(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int
         return circleAlpha
     }
     fun setOnAnimatedEnd() {}
+    fun stopAnimation(){
+        if(animator != null){
+            animator!!.end()
+            animator = null
+        }
+    }
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(object : OnCircleButtonClickListener(l) {
             override fun onButtonClick(v: View?) {
